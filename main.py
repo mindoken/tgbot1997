@@ -35,10 +35,26 @@ print()
 bot = telebot.TeleBot('5554380645:AAHyRhH97JpRnivcwVTf0tZ-KAJ041SiQik')
 
 
-@bot.message_handler(commands=['start'])
-def start(message):
-    mess = f'Good morning ^_^   today is {str(datetime.date.today())} курс валюты: 1 вона = {currency.current_converted_price} weather today is {w.temperature("celsius")["temp"]}degrees and we have { w.detailed_status} '
-    bot.send_message(message.chat.id, mess, parse_mode='html')
+markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+btn1 = types.KeyboardButton("Сегодня")
+btn2 = types.KeyboardButton("Валюта")
+btn3 = types.KeyboardButton("Погода")
+markup.add(btn1, btn2, btn3)
+
+
+@bot.message_handler(content_types=['text'])
+def startbot(message):
+    if message.text == "Сегодня":
+        mess = f'Good morning ^_^   today is {str(datetime.date.today())} currency is 1 kw = {currency.current_converted_price} R. weather today is {w.temperature("celsius")["temp"]} degrees and we have { w.detailed_status} '
+        bot.send_message(message.chat.id, mess, parse_mode='html', reply_markup=markup)
+    elif message.text == "Погода":
+        mess = f'weather today is {w.temperature("celsius")["temp"]} degrees and we have {w.detailed_status} '
+        bot.send_message(message.chat.id, mess, parse_mode='html')
+    elif message.text == "Валюта":
+        mess = f'currency now : 1 kw = {currency.current_converted_price} R '
+        bot.send_message(message.chat.id, mess, parse_mode='html')
+    else:
+        pass
 
 
 bot.polling(none_stop=True)
